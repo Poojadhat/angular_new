@@ -8,7 +8,7 @@
      proxy: NONE                ##Change this value to required proxy setting like user:password@proxyhost:proxyport
 
   tasks:
-     - name: Check linux server monitoring agent exists "{{device_key}}"
+     - name: Check linux server monitoring agent exists {{device_key}}
        stat:
          path: /opt/site24x7/monagent
        register: installed
