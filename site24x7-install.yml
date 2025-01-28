@@ -1,6 +1,7 @@
 ---
 - name: Install Site24x7 server monitoring agent
   hosts: "{{hostname}}"          ##Change this value to select desired hosts
+  become: yes
   become_user: root
   
   vars:
