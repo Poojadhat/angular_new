@@ -1,4 +1,3 @@
----
 - name: Install Site24x7 server monitoring agent
   hosts: "{{ hostname }}"          ##Change this value to select desired hosts
   become: yes
@@ -27,6 +26,13 @@
        when: (ansible_machine == "x86_64" and proxy != "NONE" and not installed.stat.exists)
      - service: name=site24x7monagent state=restarted
        when: ansible_machine == "x86_64" and not installed.stat.exists
+
+     - name: Update Site24x7 server domain for VMware local environment
+       shell: sudo sed -i 's/plus.site24x7.com/vmwareplus.localsite24x7.com/g' /opt/site24x7/monagent/conf/server_domains.json
+
+     - name: Restart Site24x7 monitoring agent
+       shell: sudo /opt/site24x7/monagent/bin/monagent restart
+
      - name: Download 32 bit Site24x7 agent from public URL
        get_url:
          url: https://staticdownloads.site24x7.com/server/Site24x7_Linux_32bit.install
