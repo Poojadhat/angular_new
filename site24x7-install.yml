@@ -26,17 +26,10 @@
        when: (ansible_machine == "x86_64" and proxy != "NONE" and not installed.stat.exists)
      - service: name=site24x7monagent state=restarted
        when: ansible_machine == "x86_64" and not installed.stat.exists
-
-     - name: Update Site24x7 server domain for VMware local environment
-       shell: sudo sed -i 's/plus.site24x7.com/vmwareplus.localsite24x7.com/g' /opt/site24x7/monagent/conf/server_domains.json
-
-     - name: Restart Site24x7 monitoring agent
-       shell: sudo /opt/site24x7/monagent/bin/monagent restart
-
      - name: Download 32 bit Site24x7 agent from public URL
        get_url:
          url: https://staticdownloads.site24x7.com/server/Site24x7_Linux_32bit.install
-         dest: /opt/Site24x7_Linux_64bit.install 
+         dest: /opt/Site24x7_Linux_32bit.install 
          mode: 0750
        when: ansible_machine == "i386" and not installed.stat.exists
      - name : Install 32 bit Site24x7 agent in the server
@@ -45,6 +38,10 @@
      - name : Install 32 bit Site24x7 agent in the server
        shell: /opt/Site24x7_Linux_32bit.install -i -key={{ device_key }} -installer=ansible -proxy={{ proxy }}
        when: (ansible_machine == "i386" and proxy != "NONE" and not installed.stat.exists)
+     - name: Update Site24x7 server domain for VMware local environment
+       shell: sudo sed -i 's/plus.site24x7.com/vmwareplus.localsite24x7.com/g' /opt/site24x7/monagent/conf/server_domains.json
+     - name: Restart Site24x7 monitoring agent
+       shell: sudo /opt/site24x7/monagent/bin/monagent restart
      - service: name=site24x7monagent state=restarted
        when: ansible_machine == "i386" and not installed.stat.exists
      - name: Deleting 64 bit install file
